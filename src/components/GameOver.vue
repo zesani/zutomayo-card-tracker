@@ -9,6 +9,12 @@ const winner = computed(() => {
   if (store.hp.night <= 0) return { side: 'day', name: 'Day' }
   return { side: 'night', name: 'Night' }
 })
+
+function newGame() {
+  if (window.confirm('เริ่มเกมใหม่? ข้อมูลทั้งหมดจะหายไป')) {
+    store.startGame()
+  }
+}
 </script>
 
 <template>
@@ -22,7 +28,7 @@ const winner = computed(() => {
         <div class="stat"><span><PhaseIcon phase="day" :size="14" /> Day HP</span> <strong>{{ store.hp.day }}</strong></div>
         <div class="stat"><span>Turns</span> <strong>{{ store.turnNumber - 1 }}</strong></div>
       </div>
-      <button class="btn-new-game" @click="store.startGame()">New Game</button>
+      <button class="btn-new-game" @click="newGame">New Game</button>
     </div>
   </div>
 </template>

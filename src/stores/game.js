@@ -20,15 +20,19 @@ function snapshot(state) {
 const STORAGE_KEY = 'zutomayo-card-save'
 
 function persist(state) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({
-    timePosition: state.timePosition,
-    hp: { ...state.hp },
-    cardLimit: { ...state.cardLimit },
-    turnNumber: state.turnNumber,
-    started: state.started,
-    history: state.history.map(s => ({ ...s, hp: { ...s.hp }, cardLimit: { ...s.cardLimit } })),
-    future: state.future.map(s => ({ ...s, hp: { ...s.hp }, cardLimit: { ...s.cardLimit } })),
-  }))
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      timePosition: state.timePosition,
+      hp: { ...state.hp },
+      cardLimit: { ...state.cardLimit },
+      turnNumber: state.turnNumber,
+      started: state.started,
+      history: state.history.map(s => ({ ...s, hp: { ...s.hp }, cardLimit: { ...s.cardLimit } })),
+      future: state.future.map(s => ({ ...s, hp: { ...s.hp }, cardLimit: { ...s.cardLimit } })),
+    }))
+  } catch {
+    // storage full or unavailable — run without persistence
+  }
 }
 
 function loadSave() {
