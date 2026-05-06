@@ -66,6 +66,7 @@ export const useGameStore = defineStore('game', {
       this.started = true
       this.history = []
       this.future = []
+      persist(this)
     },
 
     resolveTurn(nightTime, dayTime, nightAttack, dayAttack) {
@@ -78,6 +79,7 @@ export const useGameStore = defineStore('game', {
       this.cardLimit.night = limits.night
       this.cardLimit.day = limits.day
       this.turnNumber++
+      persist(this)
       return result
     },
 
@@ -85,12 +87,14 @@ export const useGameStore = defineStore('game', {
       if (!this.canUndo) return
       this.future.push(snapshot(this))
       Object.assign(this, this.history.pop())
+      persist(this)
     },
 
     redo() {
       if (!this.canRedo) return
       this.history.push(snapshot(this))
       Object.assign(this, this.future.pop())
+      persist(this)
     },
 
     loadGame() {

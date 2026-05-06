@@ -239,4 +239,47 @@ describe('localStorage persistence', () => {
     expect(() => store.loadGame()).not.toThrow()
     expect(store.started).toBe(false)
   })
+
+  it('startGame writes a fresh save to localStorage', () => {
+    const store = useGameStore()
+    store.startGame()
+    const raw = localStorage.getItem('zutomayo-card-save')
+    expect(raw).not.toBeNull()
+    const save = JSON.parse(raw)
+    expect(save.started).toBe(true)
+    expect(save.turnNumber).toBe(1)
+    expect(save.hp).toEqual({ night: 100, day: 100 })
+  })
+
+  it('resolveTurn updates the save in localStorage', () => {
+    const store = useGameStore()
+    store.startGame()
+    store.resolveTurn(2, 3, 10, 5)
+    const save = JSON.parse(localStorage.getItem('zutomayo-card-save'))
+    expect(save.timePosition).toBe(5)
+    expect(save.hp.day).toBe(95)
+    expect(save.history).toHaveLength(1)
+  })
+
+  it('undo updates the save in localStorage', () => {
+    const store = useGameStore()
+    store.startGame()
+    store.resolveTurn(2, 3, 10, 5)
+    store.undo()
+    const save = JSON.parse(localStorage.getItem('zutomayo-card-save'))
+    expect(save.timePosition).toBe(0)
+    expect(save.history).toHaveLength(0)
+    expect(save.future).toHaveLength(1)
+  })
+
+  it('redo updates the save in localStorage', () => {
+    const store = useGameStore()
+    store.startGame()
+    store.resolveTurn(2, 3, 10, 5)
+    store.undo()
+    store.redo()
+    const save = JSON.parse(localStorage.getItem('zutomayo-card-save'))
+    expect(save.timePosition).toBe(5)
+    expect(save.future).toHaveLength(0)
+  })
 })
