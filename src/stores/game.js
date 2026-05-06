@@ -17,6 +17,29 @@ function snapshot(state) {
   }
 }
 
+const STORAGE_KEY = 'zutomayo-card-save'
+
+function persist(state) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    timePosition: state.timePosition,
+    hp: { ...state.hp },
+    cardLimit: { ...state.cardLimit },
+    turnNumber: state.turnNumber,
+    started: state.started,
+    history: state.history.map(s => ({ ...s, hp: { ...s.hp }, cardLimit: { ...s.cardLimit } })),
+    future: state.future.map(s => ({ ...s, hp: { ...s.hp }, cardLimit: { ...s.cardLimit } })),
+  }))
+}
+
+function loadSave() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
+}
+
 export const useGameStore = defineStore('game', {
   state: () => ({
     ...structuredClone(INITIAL_STATE),
@@ -68,6 +91,19 @@ export const useGameStore = defineStore('game', {
       if (!this.canRedo) return
       this.history.push(snapshot(this))
       Object.assign(this, this.future.pop())
+    },
+
+    loadGame() {
+      const save = loadSave()
+      if (save && save.started && save.hp.night > 0 && save.hp.day > 0) {
+        this.timePosition = save.timePosition
+        this.hp = save.hp
+        this.cardLimit = save.cardLimit
+        this.turnNumber = save.turnNumber
+        this.started = save.started
+        this.history = save.history
+        this.future = save.future
+      }
     },
   },
 })

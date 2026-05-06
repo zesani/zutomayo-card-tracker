@@ -158,3 +158,78 @@ describe('undo / redo', () => {
     expect(store.turnNumber).toBe(1)
   })
 })
+
+describe('localStorage persistence', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    localStorage.clear()
+  })
+
+  it('loadGame does nothing when localStorage is empty', () => {
+    const store = useGameStore()
+    store.loadGame()
+    expect(store.started).toBe(false)
+    expect(store.turnNumber).toBe(1)
+  })
+
+  it('loadGame restores a valid save', () => {
+    const save = {
+      timePosition: 5,
+      hp: { night: 80, day: 90 },
+      cardLimit: { night: 2, day: 1 },
+      turnNumber: 4,
+      started: true,
+      history: [{ timePosition: 0, hp: { night: 100, day: 100 }, cardLimit: { night: 1, day: 1 }, turnNumber: 1 }],
+      future: [],
+    }
+    localStorage.setItem('zutomayo-card-save', JSON.stringify(save))
+    const store = useGameStore()
+    store.loadGame()
+    expect(store.started).toBe(true)
+    expect(store.timePosition).toBe(5)
+    expect(store.hp).toEqual({ night: 80, day: 90 })
+    expect(store.turnNumber).toBe(4)
+    expect(store.history).toHaveLength(1)
+    expect(store.future).toHaveLength(0)
+  })
+
+  it('loadGame ignores a save where a side has 0 HP', () => {
+    const save = {
+      timePosition: 10,
+      hp: { night: 0, day: 100 },
+      cardLimit: { night: 1, day: 1 },
+      turnNumber: 8,
+      started: true,
+      history: [],
+      future: [],
+    }
+    localStorage.setItem('zutomayo-card-save', JSON.stringify(save))
+    const store = useGameStore()
+    store.loadGame()
+    expect(store.started).toBe(false)
+    expect(store.turnNumber).toBe(1)
+  })
+
+  it('loadGame ignores a save where started is false', () => {
+    const save = {
+      timePosition: 3,
+      hp: { night: 90, day: 90 },
+      cardLimit: { night: 1, day: 1 },
+      turnNumber: 2,
+      started: false,
+      history: [],
+      future: [],
+    }
+    localStorage.setItem('zutomayo-card-save', JSON.stringify(save))
+    const store = useGameStore()
+    store.loadGame()
+    expect(store.started).toBe(false)
+  })
+
+  it('loadGame ignores corrupt localStorage data', () => {
+    localStorage.setItem('zutomayo-card-save', 'not-json')
+    const store = useGameStore()
+    expect(() => store.loadGame()).not.toThrow()
+    expect(store.started).toBe(false)
+  })
+})
