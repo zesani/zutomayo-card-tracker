@@ -187,6 +187,7 @@ describe('localStorage persistence', () => {
     expect(store.started).toBe(true)
     expect(store.timePosition).toBe(5)
     expect(store.hp).toEqual({ night: 80, day: 90 })
+    expect(store.cardLimit).toEqual({ night: 2, day: 1 })
     expect(store.turnNumber).toBe(4)
     expect(store.history).toHaveLength(1)
     expect(store.future).toHaveLength(0)
@@ -227,6 +228,13 @@ describe('localStorage persistence', () => {
 
   it('loadGame ignores corrupt localStorage data', () => {
     localStorage.setItem('zutomayo-card-save', 'not-json')
+    const store = useGameStore()
+    expect(() => store.loadGame()).not.toThrow()
+    expect(store.started).toBe(false)
+  })
+
+  it('loadGame ignores a save missing the hp field', () => {
+    localStorage.setItem('zutomayo-card-save', JSON.stringify({ started: true }))
     const store = useGameStore()
     expect(() => store.loadGame()).not.toThrow()
     expect(store.started).toBe(false)

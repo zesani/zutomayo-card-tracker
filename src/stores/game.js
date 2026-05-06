@@ -95,7 +95,7 @@ export const useGameStore = defineStore('game', {
 
     loadGame() {
       const save = loadSave()
-      if (save && save.started && save.hp.night > 0 && save.hp.day > 0) {
+      if (save && save.started && save.hp?.night > 0 && save.hp?.day > 0) {
         this.timePosition = save.timePosition
         this.hp = save.hp
         this.cardLimit = save.cardLimit
