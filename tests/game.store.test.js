@@ -161,7 +161,6 @@ describe('undo / redo', () => {
 
 describe('localStorage persistence', () => {
   beforeEach(() => {
-    setActivePinia(createPinia())
     localStorage.clear()
   })
 
