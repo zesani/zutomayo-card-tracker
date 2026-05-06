@@ -1,0 +1,215 @@
+:root {
+  --bg: #06060f;
+  --bg-deeper: #03030a;
+  --surface: #0d0d24;
+  --surface-2: #151540;
+  --accent: #8b5cf6;
+  --accent-light: #b4a7f0;
+  --night: #8b7cf0;
+  --night-glow: rgba(139, 124, 240, 0.35);
+  --day: #f0a040;
+  --day-glow: rgba(240, 160, 64, 0.35);
+  --day-dark: #7c2d0e;
+  --text: #e8e4f0;
+  --text-muted: #8b8aaa;
+  --border: #1e1e4a;
+  --border-light: #2a2a5e;
+  --hp-high: #4ade80;
+  --hp-mid: #f59e0b;
+  --hp-low: #f43f5e;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font-display: 'Noto Sans', system-ui, sans-serif;
+  --font-body: 'Noto Sans', system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  min-height: 100dvh;
+  max-width: 480px;
+  margin: 0 auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(139, 124, 240, 0.08), transparent),
+    radial-gradient(ellipse 60% 40% at 50% 120%, rgba(240, 160, 64, 0.06), transparent),
+    radial-gradient(1px 1px at 15% 25%, rgba(255,255,255,0.12), transparent),
+    radial-gradient(1px 1px at 75% 15%, rgba(255,255,255,0.09), transparent),
+    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,0.07), transparent),
+    radial-gradient(1px 1px at 85% 60%, rgba(255,255,255,0.10), transparent),
+    radial-gradient(1.5px 1.5px at 60% 35%, rgba(255,255,255,0.11), transparent),
+    radial-gradient(1px 1px at 45% 80%, rgba(255,255,255,0.08), transparent),
+    radial-gradient(1px 1px at 10% 55%, rgba(255,255,255,0.06), transparent),
+    radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.09), transparent);
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-family: var(--font-body);
+  padding: 0.6rem 1.2rem;
+  transition: all 0.2s ease;
+}
+
+button:disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+
+input[type="number"] {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 16px;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-body);
+}
+
+input[type="number"]:focus {
+  outline: none;
+  border-color: var(--accent-light);
+  box-shadow: 0 0 0 3px rgba(139, 124, 240, 0.15);
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+/* Shared step styles */
+.step { display: flex; flex-direction: column; gap: 0.6rem; flex: 1; min-height: 0; }
+.step-title { font-size: 1rem; font-weight: 700; font-family: var(--font-display); letter-spacing: 0.02em; }
+.step-hint { font-size: 0.8rem; color: var(--text-muted); }
+.phase-reminder { color: var(--accent-light); font-weight: 600; }
+
+.input-group { display: flex; flex-direction: column; gap: 0.4rem; }
+.input-group label { font-size: 0.9rem; color: var(--text-muted); }
+
+.step-nav { display: flex; gap: 0.5rem; margin-top: 0.25rem; }
+.step-nav button { flex: 1; }
+
+.btn-primary { background: var(--accent); color: white; font-weight: 700; border-radius: var(--radius-sm); }
+.btn-primary:not(:disabled):hover { background: #9d6fff; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35); }
+.btn-primary:not(:disabled):active { transform: translateY(0); }
+.btn-secondary { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.btn-secondary:hover { background: var(--border); border-color: var(--border-light); }
+.btn-full { width: 100%; }
+
+.phase-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1.5rem;
+  background: var(--surface-2);
+  border-radius: var(--radius);
+}
+.result-icon { font-size: 3rem; }
+.result-label { font-size: 1.4rem; font-weight: 700; font-family: var(--font-display); }
+.result-position { font-size: 0.85rem; color: var(--text-muted); }
+
+.combat-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.75rem;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+.combat-result.night { border-left: 4px solid var(--night); }
+.combat-result.day { border-left: 4px solid var(--day); }
+.combat-result.draw { border-left: 4px solid var(--text-muted); }
+.result-winner { font-size: 1.1rem; font-weight: 700; font-family: var(--font-display); }
+.result-damage { color: var(--text-muted); }
+
+.card-limit-box {
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.card-limit-box h3 { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+.limit-row { display: flex; justify-content: space-between; align-items: center; }
+.btn-end { background: #276749; border-radius: var(--radius-sm); }
+.btn-end:hover { background: #2d8a5e; }
+
+/* Mobile safe area */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .board { padding-bottom: calc(1rem + env(safe-area-inset-bottom)); }
+}
+
+/* Touch tap highlight off */
+* { -webkit-tap-highlight-color: transparent; }
+
+/* Chip selector (Step1Time, Step3Attack) */
+.chip-selector { display: flex; flex-direction: column; gap: 0.35rem; }
+.chip-selector-label { font-size: 0.8rem; color: var(--text-muted); }
+.chip-row { display: flex; gap: 4px; flex-wrap: wrap; }
+.chip {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-size: 0.85rem; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+.chip-other { border-style: dashed; background: transparent; font-size: 0.8rem; }
+.chip-active-night { border-color: var(--accent-light); background: var(--accent); color: white; box-shadow: 0 0 12px var(--night-glow); }
+.chip-active-day   { border-color: var(--day); background: var(--day-dark); color: white; box-shadow: 0 0 12px var(--day-glow); }
+.chip-night:not(.chip-active-night):hover { border-color: var(--accent); }
+.chip-day:not(.chip-active-day):hover     { border-color: var(--day); }
+.chip-manual {
+  border: 1px dashed var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-sm); color: var(--text);
+  font-size: 0.9rem; padding: 6px 10px;
+  width: 100%; text-align: center;
+}
+
+/* Attack stepper */
+.stepper { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+.stepper-btn {
+  padding: 5px 10px; border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface-2); color: var(--text-muted);
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+.stepper-btn:hover { background: var(--accent); border-color: var(--accent); color: white; }
+.stepper-val { flex: 1; text-align: center; font-size: 1rem; font-weight: 700; color: var(--text); }
+
+/* Time step preview row */
+.time-preview {
+  padding: 0.6rem 0.9rem;
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  font-size: 0.85rem; color: var(--text-muted);
+}
+.preview-night { color: var(--accent-light); font-weight: 600; }
+.preview-day   { color: var(--day); font-weight: 600; }
+
+/* Phase badge */
+.phase-badge {
+  text-align: center;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.9rem;
+  font-family: var(--font-display);
+  letter-spacing: 0.03em;
+}
+.phase-badge-night { background: rgba(139, 124, 240, 0.15); color: var(--accent-light); }
+.phase-badge-day   { background: rgba(240, 160, 64, 0.12); color: var(--day); }
