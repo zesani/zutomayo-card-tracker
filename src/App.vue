@@ -1,10 +1,12 @@
 <script setup>
+import { onMounted } from 'vue'
 import { useGameStore } from './stores/game'
 import GameSetup from './components/GameSetup.vue'
 import GameBoard from './components/GameBoard.vue'
 import GameOver from './components/GameOver.vue'
 
 const store = useGameStore()
+onMounted(() => store.loadGame())
 </script>
 
 <template>
