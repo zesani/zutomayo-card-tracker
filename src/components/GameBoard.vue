@@ -7,6 +7,12 @@ import TurnModal from './TurnModal.vue'
 
 const store = useGameStore()
 const showModal = ref(false)
+
+function newGame() {
+  if (window.confirm('เริ่มเกมใหม่? ข้อมูลทั้งหมดจะหายไป')) {
+    store.startGame()
+  }
+}
 </script>
 
 <template>
@@ -28,6 +34,7 @@ const showModal = ref(false)
     <div class="turn-area">
       <div class="turn-info">Turn {{ store.turnNumber }}</div>
       <button class="btn-start-turn" @click="showModal = true">START TURN</button>
+      <button class="btn-new-game" @click="newGame">New Game</button>
     </div>
   </div>
 </template>
@@ -77,4 +84,16 @@ const showModal = ref(false)
   transition: all 0.2s ease;
 }
 .btn-start-turn:hover { background: #9d6fff; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4); }
+.btn-new-game {
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-family: var(--font-display);
+  letter-spacing: 0.05em;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+.btn-new-game:hover { color: var(--text); border-color: var(--text-muted); }
 </style>
