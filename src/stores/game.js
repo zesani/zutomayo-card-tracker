@@ -57,6 +57,7 @@ export const useGameStore = defineStore('game', {
     isGameOver: (state) => state.hp.night <= 0 || state.hp.day <= 0,
     canUndo: (state) => state.history.length > 0,
     canRedo: (state) => state.future.length > 0,
+    hasSave: (state) => state.turnNumber > 1 || state.history.length > 0,
   },
 
   actions: {
@@ -98,6 +99,11 @@ export const useGameStore = defineStore('game', {
       if (!this.canRedo) return
       this.history.push(snapshot(this))
       Object.assign(this, this.future.pop())
+      persist(this)
+    },
+
+    goHome() {
+      this.started = false
       persist(this)
     },
 

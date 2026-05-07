@@ -1,20 +1,16 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useGameStore } from '../stores/game'
 import PhaseIcon from './PhaseIcon.vue'
+import ConfirmModal from './ConfirmModal.vue'
 
 const store = useGameStore()
+const showConfirm = ref(false)
 
 const winner = computed(() => {
   if (store.hp.night <= 0) return { side: 'day', name: 'Day' }
   return { side: 'night', name: 'Night' }
 })
-
-function newGame() {
-  if (window.confirm('เริ่มเกมใหม่? ข้อมูลทั้งหมดจะหายไป')) {
-    store.startGame()
-  }
-}
 </script>
 
 <template>
@@ -28,9 +24,15 @@ function newGame() {
         <div class="stat"><span><PhaseIcon phase="day" :size="14" /> Day HP</span> <strong>{{ store.hp.day }}</strong></div>
         <div class="stat"><span>Turns</span> <strong>{{ store.turnNumber - 1 }}</strong></div>
       </div>
-      <button class="btn-new-game" @click="newGame">New Game</button>
+      <button class="btn-new-game" @click="showConfirm = true">New Game</button>
     </div>
   </div>
+  <ConfirmModal
+    v-if="showConfirm"
+    message="Start a new game? All progress will be lost."
+    @confirm="store.startGame()"
+    @cancel="showConfirm = false"
+  />
 </template>
 
 <style scoped>

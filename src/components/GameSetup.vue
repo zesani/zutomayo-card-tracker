@@ -1,8 +1,11 @@
 <script setup>
+import { ref } from 'vue'
 import { useGameStore } from '../stores/game'
 import PhaseIcon from './PhaseIcon.vue'
+import ConfirmModal from './ConfirmModal.vue'
 
 const store = useGameStore()
+const showConfirm = ref(false)
 </script>
 
 <template>
@@ -15,9 +18,17 @@ const store = useGameStore()
         <span class="vs">VS</span>
         <div class="player-badge day"><PhaseIcon phase="day" :size="14" /> Day</div>
       </div>
-      <button class="btn-start" @click="store.startGame()">New Game</button>
+      <button v-if="store.hasSave" class="btn-start" @click="store.started = true">Resume</button>
+      <button v-if="store.hasSave" class="btn-new" @click="showConfirm = true">New Game</button>
+      <button v-else class="btn-start" @click="store.startGame()">New Game</button>
     </div>
   </div>
+  <ConfirmModal
+    v-if="showConfirm"
+    message="Start a new game? All progress will be lost."
+    @confirm="store.startGame()"
+    @cancel="showConfirm = false"
+  />
 </template>
 
 <style scoped>
@@ -83,4 +94,15 @@ const store = useGameStore()
   transition: all 0.2s ease;
 }
 .btn-start:hover { background: #9d6fff; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4); }
+.btn-new {
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  transition: all 0.2s ease;
+}
+.btn-new:hover { color: var(--text); border-color: var(--text-muted); }
 </style>

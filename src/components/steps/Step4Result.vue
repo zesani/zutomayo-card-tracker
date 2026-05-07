@@ -23,11 +23,13 @@ function damagePct(side) {
 
 <template>
   <div class="step">
-    <h2 class="step-title">Result</h2>
+    <h2 class="step-title">Summary</h2>
     <div class="combat-result" :class="combat.winner ?? 'draw'">
       <template v-if="combat.winner">
-        <span class="result-winner"><PhaseIcon :phase="combat.winner" :size="16" /> {{ combat.winner === 'night' ? 'Night' : 'Day' }} wins!</span>
-        <span class="result-damage">Damage: {{ combat.damage }}</span>
+        <span class="result-winner"><PhaseIcon :phase="combat.winner" :size="28" /> {{ combat.winner === 'night' ? 'Night' : 'Day' }} wins!</span>
+        <span class="result-damage">
+          {{ combat.winner === 'night' ? 'Night' : 'Day' }} deals {{ combat.damage }} dmg to {{ combat.winner === 'night' ? 'Day' : 'Night' }}
+        </span>
       </template>
       <template v-else>
         <span class="result-winner">Draw</span>
@@ -54,17 +56,6 @@ function damagePct(side) {
         </div>
       </div>
     </div>
-    <div class="card-limit-box">
-      <h3>Cards next turn</h3>
-      <div class="limit-row">
-        <span><PhaseIcon phase="night" :size="14" /> Night</span>
-        <strong>{{ cardLimit.night }} card{{ cardLimit.night > 1 ? 's' : '' }}</strong>
-      </div>
-      <div class="limit-row">
-        <span><PhaseIcon phase="day" :size="14" /> Day</span>
-        <strong>{{ cardLimit.day }} card{{ cardLimit.day > 1 ? 's' : '' }}</strong>
-      </div>
-    </div>
     <div class="step-nav">
       <button class="btn-secondary" @click="emit('back')">← Back</button>
       <button class="btn-primary btn-end" @click="emit('endTurn')">End Turn ✓</button>
@@ -73,13 +64,13 @@ function damagePct(side) {
 </template>
 
 <style scoped>
-.hp-preview { display: flex; flex-direction: column; gap: 0.4rem; margin: 0.4rem 0; }
-.hp-row { display: flex; flex-direction: column; gap: 0.2rem; }
-.hp-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
-.hp-label-name { flex-shrink: 0; }
-.hp-numbers { color: var(--text-muted, #9ca3af); white-space: nowrap; }
-.hp-dmg-num { color: #ef4444; }
-.hp-bar-track { display: flex; height: 10px; border-radius: 5px; overflow: hidden; background: var(--surface-2, #1f2937); }
+.hp-preview { display: flex; flex-direction: column; gap: 0.75rem; margin: 0.5rem 0; }
+.hp-row { display: flex; flex-direction: column; gap: 0.35rem; }
+.hp-label { display: flex; justify-content: space-between; align-items: center; font-size: 1rem; }
+.hp-label-name { flex-shrink: 0; font-weight: 600; }
+.hp-numbers { color: var(--text-muted, #9ca3af); white-space: nowrap; font-size: 0.95rem; }
+.hp-dmg-num { color: #ef4444; font-weight: 700; }
+.hp-bar-track { display: flex; height: 16px; border-radius: 8px; overflow: hidden; background: var(--surface-2, #1f2937); }
 .hp-fill { height: 100%; transition: width 0.5s ease; }
 .hp-fill-night { background: #7c3aed; }
 .hp-fill-day   { background: #d97706; }

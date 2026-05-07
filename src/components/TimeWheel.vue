@@ -96,7 +96,7 @@ const dayPositions = computed(() =>
     const rInner = isCur ? 4.6 : 3.5
     const rOuter = isCur ? 9 : (nRays === 8 ? 8 : 6.5)
     return {
-      pos, px, py, isCur, nRays,
+      pos, px, py, isCur, nRays, rOuter,
       rCircle: isCur ? 3.2 : 2.4,
       raysPath: sunRaysPath(px, py, nRays, rInner, rOuter),
       color: isCur ? '#fcd34d' : (nRays === 8 ? '#f0a040' : '#d97706'),
@@ -180,14 +180,17 @@ const dayPositions = computed(() =>
           :filter="m.isCur ? `url(#tw-glow-strong-${uid})` : undefined"/>
       </g>
 
-      <!-- Day dots (sun with triangular rays) -->
+      <!-- Day dots (sun with rays) -->
       <g v-for="d in dayPositions" :key="`d${d.pos}`">
-        <circle v-if="d.isCur" :cx="d.px" :cy="d.py" :r="d.rCircle + 3"
+        <circle v-if="d.isCur" :cx="d.px" :cy="d.py" :r="d.rOuter + 3"
           fill="none" stroke="#f0a040" stroke-width="1.5" opacity="0.6"/>
-        <path :d="d.raysPath" :fill="d.color"
-          :filter="d.isCur ? `url(#tw-glow-strong-${uid})` : undefined"/>
-        <circle :cx="d.px" :cy="d.py" :r="d.rCircle" :fill="d.color"
-          :filter="d.isCur ? `url(#tw-glow-strong-${uid})` : undefined"/>
+        <circle v-if="d.isCur" :cx="d.px" :cy="d.py" :r="d.rOuter + 1.5"
+          fill="none" stroke="#fcd34d" stroke-width="1" opacity="0.35">
+          <animate attributeName="r" :values="`${d.rOuter + 1};${d.rOuter + 2.5};${d.rOuter + 1}`" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.35;0.15;0.35" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <path :d="d.raysPath" :fill="d.color"/>
+        <circle :cx="d.px" :cy="d.py" :r="d.rCircle" :fill="d.color"/>
       </g>
 
       <!-- Preview ring -->
@@ -205,8 +208,10 @@ const dayPositions = computed(() =>
     </svg>
 
     <div v-if="showControls" class="undo-redo-row">
-      <button class="btn-undo-redo" :disabled="!store.canUndo" @click="store.undo()">↩ Undo</button>
-      <button class="btn-undo-redo" :disabled="!store.canRedo" @click="store.redo()">↪ Redo</button>
+      <button class="btn-home" @click="store.goHome()">Home</button>
+      <button class="btn-undo-redo btn-undo" :disabled="!store.canUndo" @click="store.undo()">↺</button>
+      <span class="turn-label">Turn {{ store.turnNumber }}</span>
+      <button class="btn-undo-redo btn-redo" :disabled="!store.canRedo" @click="store.redo()">↻</button>
     </div>
   </div>
 </template>
@@ -214,17 +219,41 @@ const dayPositions = computed(() =>
 <style scoped>
 .time-wheel { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; height: 100%; }
 .wheel-svg { flex: 1; min-height: 0; width: auto; max-width: 100%; overflow: visible; }
-.undo-redo-row { display: flex; gap: 0.75rem; flex-shrink: 0; padding: 0.4rem 0; }
+.undo-redo-row { display: flex; align-items: center; justify-content: center; gap: 0.75rem; flex-shrink: 0; padding: 0.4rem 0; position: relative; width: 100%; }
+.turn-label { min-width: 4.5rem; text-align: center; font-size: 0.78rem; color: var(--text-muted); font-family: var(--font-display); letter-spacing: 0.06em; text-transform: uppercase; }
+.btn-home {
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  padding: 0 0.75rem;
+  height: 2.4rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  position: absolute;
+  left: 0;
+  transition: all 0.2s ease;
+}
+.btn-home:hover { color: var(--text); border-color: var(--text-muted); }
 .btn-undo-redo {
   background: var(--surface-2);
   color: var(--text);
   border: 1px solid var(--border);
   font-size: 0.85rem;
   padding: 0.4rem 0.9rem;
+  height: 2.4rem;
   border-radius: var(--radius-sm);
   font-family: var(--font-body);
   transition: all 0.2s ease;
 }
 .btn-undo-redo:not(:disabled):hover { background: var(--accent); border-color: var(--accent); color: white; }
+
+@media (max-height: 319px) {
+  .time-wheel { flex-direction: row; align-items: center; }
+  .undo-redo-row { display: contents; }
+  .wheel-svg { order: 2; flex: 1; height: 100%; }
+  .btn-undo { order: 1; flex-shrink: 0; }
+  .btn-redo { order: 3; flex-shrink: 0; }
+}
 .preview-ring { will-change: stroke-dashoffset; }
 </style>

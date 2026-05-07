@@ -18,7 +18,7 @@ const label = { night: 'Night', day: 'Day' }
         <div class="hp-bar-fill" :class="'hp-fill-' + side" :style="{ width: hp + '%' }"></div>
       </div>
       <span class="hp-value">{{ hp }}<small>HP</small></span>
-      <span class="card-limit">{{ cardLimit }}✦</span>
+      <span class="card-limit">{{ cardLimit }}</span>
     </div>
   </div>
 </template>
@@ -27,7 +27,7 @@ const label = { night: 'Night', day: 'Day' }
 .player-panel {
   background: var(--surface);
   border-radius: var(--radius-sm);
-  padding: 0.4rem 0.75rem;
+  padding: clamp(0.4rem, 1.2dvh, 0.75rem) 0.75rem;
   flex-shrink: 0;
   border: 1px solid var(--border);
 }
@@ -39,7 +39,7 @@ const label = { night: 'Night', day: 'Day' }
 .player-name { font-weight: 600; font-size: 0.82rem; white-space: nowrap; font-family: var(--font-display); letter-spacing: 0.02em; }
 .hp-bar-track {
   flex: 1;
-  height: 10px;
+  height: clamp(10px, 2dvh, 24px);
   background: var(--surface-2);
   border-radius: 5px;
   overflow: hidden;
@@ -50,5 +50,19 @@ const label = { night: 'Night', day: 'Day' }
 .hp-fill-day   { background: #d97706; }
 .hp-value { font-size: 0.82rem; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .hp-value small { font-size: 0.62rem; opacity: 0.5; margin-left: 1px; }
-.card-limit { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; font-weight: 500; }
+.card-limit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.2rem;
+  height: 1.5rem;
+  padding: 0 0.2rem;
+  border: 1px solid var(--border-light);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.22);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
 </style>

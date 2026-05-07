@@ -18,6 +18,7 @@ const dayAttack = ref(0)
 const previewPosition = computed(() =>
   advanceTime(store.timePosition, nightTime.value, dayTime.value)
 )
+const currentPhase = computed(() => getPhase(store.timePosition))
 const previewPhase = computed(() => getPhase(previewPosition.value))
 const previewCombat = computed(() =>
   resolveCombat(nightAttack.value, dayAttack.value, store.hp.night, store.hp.day)
@@ -57,6 +58,7 @@ function endTurn() {
         v-model:nightAttack="nightAttack"
         v-model:dayAttack="dayAttack"
         :phase="previewPhase"
+        :prev-phase="currentPhase"
         :position="previewPosition"
         :current-hp="store.hp"
         :preview-combat="previewCombat"

@@ -6,6 +6,7 @@ const nightAttack = defineModel('nightAttack', { default: 0 })
 const dayAttack = defineModel('dayAttack', { default: 0 })
 const props = defineProps({
   phase:         { type: String, required: true },
+  prevPhase:     { type: String, default: null },
   position:      { type: Number, default: 0 },
   nightAttack:   { type: Number, default: 0 },
   dayAttack:     { type: Number, default: 0 },
@@ -56,8 +57,13 @@ function adjustDay(delta) {
 <template>
   <div class="step">
     <div class="phase-hero" :class="phase === 'night' ? 'phase-hero-night' : 'phase-hero-day'">
-      <span class="phase-hero-icon"><PhaseIcon :phase="phase" :size="40" /></span>
+      <span class="phase-hero-icon"><PhaseIcon :phase="phase" :size="28" /></span>
       <span class="phase-hero-text">{{ phase === 'night' ? 'NIGHT' : 'DAY' }}</span>
+      <div v-if="prevPhase && prevPhase !== phase" class="phase-change-badge">
+        <span :class="'phase-tag-' + prevPhase">{{ prevPhase === 'night' ? 'Night' : 'Day' }}</span>
+        <span class="phase-arrow">→</span>
+        <span :class="'phase-tag-' + phase">{{ phase === 'night' ? 'Night' : 'Day' }}</span>
+      </div>
     </div>
 
     <h2 class="step-title">Attack Power</h2>
@@ -134,23 +140,42 @@ function adjustDay(delta) {
   align-items: center;
   justify-content: center;
   gap: 0.25rem;
-  padding: 1rem;
+  padding: 0.6rem;
   border-radius: var(--radius);
   flex: 1;
-  min-height: 60px;
-  max-height: 180px;
+  min-height: 50px;
+  max-height: 140px;
+  position: relative;
 }
 .phase-hero-night { background: rgba(139, 124, 240, 0.08); border: 1px solid rgba(139, 124, 240, 0.15); }
 .phase-hero-day   { background: rgba(240, 160, 64, 0.06);  border: 1px solid rgba(240, 160, 64, 0.12); }
-.phase-hero-icon { font-size: 2.5rem; line-height: 1; }
+.phase-hero-icon { font-size: 1.8rem; line-height: 1; }
 .phase-hero-text {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 800;
   font-family: var(--font-display);
   letter-spacing: 0.08em;
 }
 .phase-hero-night .phase-hero-text { color: var(--accent-light); }
 .phase-hero-day   .phase-hero-text { color: var(--day); }
+
+.phase-change-badge {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: rgba(0,0,0,0.45);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  white-space: nowrap;
+}
+.phase-arrow { color: var(--text-muted); }
+.phase-tag-night { color: var(--accent-light); }
+.phase-tag-day   { color: var(--day); }
 
 .hp-preview { display: flex; flex-direction: column; gap: 0.35rem; }
 .hp-row { display: flex; flex-direction: column; gap: 0.15rem; }
@@ -177,7 +202,7 @@ function adjustDay(delta) {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
 }
-.chip-selector .chip-row { justify-content: center; }
+.chip-selector .chip-row { justify-content: center; width: 100%; }
 .chip-selector .stepper { max-width: 300px; margin: 0 auto; width: 100%; }
 .step-nav { margin-top: auto; }
 
@@ -186,5 +211,18 @@ function adjustDay(delta) {
   .phase-hero-icon { font-size: 1.5rem; }
   .phase-hero-text { font-size: 1.25rem; }
   .chip-row { display: none; }
+}
+@media (max-height: 380px) {
+  .step { gap: 0.3rem; }
+  .step-title { display: none; }
+  .phase-hero { flex-direction: row; max-height: 34px; min-height: 30px; padding: 0.2rem 0.5rem; gap: 0.35rem; }
+  .phase-hero-icon { font-size: 1rem; }
+  .phase-hero-text { font-size: 0.9rem; }
+  .hp-preview { gap: 0.2rem; }
+  .hp-label { font-size: 0.78rem; }
+  .hp-bar-track { height: 6px; }
+  .chip-selector { padding: 0.15rem 0.4rem; gap: 0.1rem; }
+  .stepper-btn { width: 36px; height: 36px; font-size: 0.85rem; }
+  .stepper-val { font-size: 1rem; }
 }
 </style>

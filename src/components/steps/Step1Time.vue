@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { advanceTime } from '../../composables/gameLogic'
 import TimeWheel from '../TimeWheel.vue'
 import PhaseIcon from '../PhaseIcon.vue'
@@ -11,18 +11,8 @@ const props = defineProps({ currentPosition: { type: Number, default: 0 } })
 
 const CHIPS = [0, 1, 2, 3, 4, 5, 6]
 
-const nightSelected = ref(-1)
-const daySelected = ref(-1)
-
-function selectNightChip(val, idx) {
-  nightSelected.value = idx
-  nightTime.value = val
-}
-
-function selectDayChip(val, idx) {
-  daySelected.value = idx
-  dayTime.value = val
-}
+const nightSelected = computed(() => CHIPS.indexOf(nightTime.value))
+const daySelected = computed(() => CHIPS.indexOf(dayTime.value))
 
 const previewPos = computed(() =>
   advanceTime(props.currentPosition, nightTime.value, dayTime.value)
@@ -33,7 +23,6 @@ const showPreview = computed(() => nightTime.value > 0 || dayTime.value > 0)
 <template>
   <div class="step">
     <h2 class="step-title">Time Points</h2>
-    <p class="step-hint">Choose how far each player advances the clock</p>
 
     <div class="time-sections">
       <div class="time-section">
@@ -43,7 +32,7 @@ const showPreview = computed(() => nightTime.value > 0 || dayTime.value > 0)
             v-for="(val, idx) in CHIPS" :key="'n'+val"
             class="chip chip-night"
             :class="{ 'chip-active-night': nightSelected === idx }"
-            @click="selectNightChip(val, idx)"
+            @click="nightTime = val"
           >{{ val }}</button>
         </div>
         <div class="stepper">
@@ -60,7 +49,7 @@ const showPreview = computed(() => nightTime.value > 0 || dayTime.value > 0)
             v-for="(val, idx) in CHIPS" :key="'d'+val"
             class="chip chip-day"
             :class="{ 'chip-active-day': daySelected === idx }"
-            @click="selectDayChip(val, idx)"
+            @click="dayTime = val"
           >{{ val }}</button>
         </div>
         <div class="stepper">
@@ -106,15 +95,13 @@ const showPreview = computed(() => nightTime.value > 0 || dayTime.value > 0)
 }
 .time-section .chip-row {
   justify-content: center;
+  flex-wrap: nowrap;
+  gap: 2px;
 }
 .time-section .chip {
   width: 44px;
   height: 44px;
   font-size: 1.05rem;
-}
-.time-section .chip-row {
-  flex-wrap: nowrap;
-  gap: 2px;
 }
 .time-section .stepper {
   width: 100%;
@@ -131,7 +118,7 @@ const showPreview = computed(() => nightTime.value > 0 || dayTime.value > 0)
 .time-section .stepper-val {
   font-size: 1.3rem;
 }
-.wheel-grow { flex: 1; min-height: 80px; }
+.wheel-grow { flex: 1; min-height: 0; }
 
 @media (max-height: 550px) {
   .time-chips { display: none; }
