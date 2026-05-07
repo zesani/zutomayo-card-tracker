@@ -138,6 +138,17 @@ input[type="number"]:focus {
 .result-winner { font-size: 2rem; font-weight: 700; font-family: var(--font-display); }
 .result-damage { color: var(--text-muted); font-size: 1rem; }
 
+@media (max-height: 500px) {
+  .combat-result { padding: 0.75rem; gap: 0.2rem; }
+  .result-winner { font-size: 1.4rem; }
+  .result-damage { font-size: 0.85rem; }
+}
+@media (max-height: 380px) {
+  .combat-result { padding: 0.5rem 0.75rem; }
+  .result-winner { font-size: 1.1rem; }
+  .result-damage { font-size: 0.78rem; }
+}
+
 .card-limit-box {
   background: var(--surface-2);
   border-radius: var(--radius);
@@ -149,7 +160,7 @@ input[type="number"]:focus {
 .card-limit-box h3 { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
 .limit-row { display: flex; justify-content: space-between; align-items: center; }
 .btn-end { background: #276749; border-radius: var(--radius-sm); }
-.btn-end:hover { background: #2d8a5e; }
+.btn-end:not(:disabled):hover { background: #2d8a5e; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(39, 103, 73, 0.4); }
 
 /* Mobile safe area */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {

@@ -212,6 +212,7 @@ const dayPositions = computed(() =>
       <button class="btn-undo-redo btn-undo" :disabled="!store.canUndo" @click="store.undo()">↺</button>
       <span class="turn-label">Turn {{ store.turnNumber }}</span>
       <button class="btn-undo-redo btn-redo" :disabled="!store.canRedo" @click="store.redo()">↻</button>
+      <slot />
     </div>
   </div>
 </template>

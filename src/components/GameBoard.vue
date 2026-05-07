@@ -18,16 +18,15 @@ const showModal = ref(false)
       :card-limit="store.cardLimit.night"
     />
     <div class="wheel-wrap">
-      <TimeWheel />
+      <TimeWheel>
+        <button class="btn-start-turn" @click="showModal = true">START</button>
+      </TimeWheel>
     </div>
     <PlayerPanel
       side="day"
       :hp="store.hp.day"
       :card-limit="store.cardLimit.day"
     />
-    <div class="turn-area">
-      <button class="btn-start-turn" @click="showModal = true">START TURN</button>
-    </div>
   </div>
 </template>
 
@@ -47,25 +46,20 @@ const showModal = ref(false)
   overflow: hidden;
   margin: -0.25rem 0;
 }
-.turn-area {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
-  flex-shrink: 0;
-  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
-}
 .btn-start-turn {
   background: var(--accent);
   color: white;
-  font-size: 1rem;
+  font-size: 0.85rem;
   font-weight: 700;
-  padding: 0.75rem 2rem;
+  padding: 0 1rem;
+  height: 2.4rem;
   letter-spacing: 0.04em;
-  flex: 1;
   border-radius: var(--radius-sm);
   font-family: var(--font-display);
+  flex-shrink: 0;
+  position: absolute;
+  right: 0;
   transition: all 0.2s ease;
 }
-.btn-start-turn:hover { background: #9d6fff; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4); }
+.btn-start-turn:hover { background: #9d6fff; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4); }
 </style>

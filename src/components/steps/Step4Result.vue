@@ -76,4 +76,17 @@ function damagePct(side) {
 .hp-fill-day   { background: #d97706; }
 .hp-damage     { background: #ef4444; opacity: 0.75; height: 100%; }
 .step-nav { margin-top: auto; }
+
+@media (max-height: 500px) {
+  .hp-preview { gap: 0.35rem; margin: 0.25rem 0; }
+  .hp-label { font-size: 0.82rem; }
+  .hp-bar-track { height: 10px; border-radius: 5px; }
+}
+
+@media (max-height: 380px) {
+  .step-title { display: none; }
+  .hp-preview { gap: 0.2rem; margin: 0.15rem 0; }
+  .hp-label { font-size: 0.75rem; }
+  .hp-bar-track { height: 7px; border-radius: 4px; }
+}
 </style>
