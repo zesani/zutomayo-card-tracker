@@ -28,3 +28,6 @@ dev-mobile.sh
 
 # Claude Code local settings (personal, not shared)
 .claude/settings.local.json
+
+# Superpowers tool generated files
+.superpowers/
