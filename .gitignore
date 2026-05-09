@@ -25,3 +25,6 @@ dist-ssr
 
 # Local dev scripts
 dev-mobile.sh
+
+# Claude Code local settings (personal, not shared)
+.claude/settings.local.json
